@@ -1,4 +1,6 @@
 {
+  "name": "@cycle/most-time",
+  "version": "0.10.0",
   "description": "A time driver designed to enable awesome testing and dev tooling",
   "license": "MIT",
   "homepage": "https://cycle.js.org",
@@ -9,6 +11,10 @@
   "module": "lib/es6/index.js",
   "typings": "lib/index.d.ts",
   "types": "lib/index.d.ts",
+  "dependencies": {
+    "@cycle/time": "^0.10.0",
+    "most": "*"
+  },
   "devDependencies": {
     "@cycle/dom": "17.6",
     "@types/mocha": "2.2.x",
@@ -29,7 +35,7 @@
     "rxjs.d.ts"
   ],
   "browserify-shim": {
-    "xstream": "global:xstream"
+    "most": "global:most"
   },
   "scripts": {
     "start": "../../node_modules/.bin/budo -d example example/index.ts:index.js --live -- -p tsify",
