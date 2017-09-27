@@ -1,7 +1,8 @@
 // This file is a template that is used to generate entry points
 // for the different libraries support by @cycle/time
 import {$$STREAM_TYPE$$} from '$$PACKAGE_NAME$$';
-import {timeDriverUntyped, mockTimeSourceUntyped, Frame, Comparator, OperatorArgs} from '@cycle/time-common';
+import {timeDriverUntyped, mockTimeSourceUntyped, Frame, Comparator, OperatorArgs} from '$$TIME_PACKAGE$$';
+$$EXPORT$$
 
 export type Operator = <T>(stream: $$STREAM_TYPE$$<T>) => $$STREAM_TYPE$$<T>;
 

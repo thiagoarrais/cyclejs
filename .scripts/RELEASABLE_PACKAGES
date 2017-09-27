@@ -3,8 +3,7 @@ most-run
 rxjs-run
 jsonp
 isolate
-time/common
-time/xstream
+time
 time/rxjs
 time/most
 dom

@@ -1,6 +1,7 @@
 .PHONY: lint docs dom history html http isolate jsonp most-run run rxjs-run
 
-BINDIR=node_modules/.bin
+ROOT_DIR:=$(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
+BINDIR=$(ROOT_DIR)/node_modules/.bin
 TSLINT=$(BINDIR)/tslint
 TSC=$(BINDIR)/tsc
 MOCHA=$(BINDIR)/mocha
@@ -75,11 +76,12 @@ lib :
 			make lib $$d ; \
 		done < .scripts/RELEASABLE_PACKAGES; \
 	else \
-		rm -rf $(ARG)/lib/ ;\
-		mkdir -p $(ARG)/lib ;\
-		grep 'postinstall' $(ARG)/package.json >/dev/null && cd $(ARG) && npm run postinstall ;\
-		$(TSC) --project $(ARG) --module commonjs --outDir $(ARG)/lib ;\
-		$(TSC) --project $(ARG) --module es6 --outDir $(ARG)/lib/es6 ;\
+		dir=$(ROOT_DIR)/$(ARG) ;\
+		rm -rf $$dir/lib/ ;\
+		mkdir -p $$dir/lib ;\
+		grep 'prelib' $$dir/package.json >/dev/null && cd $$dir && npm run prelib ;\
+		$(TSC) --project $$dir --module commonjs --outDir $$dir/lib ;\
+		$(TSC) --project $$dir --module es6 --outDir $$dir/lib/es6 ;\
 		echo "✓ Compiled TypeScript to lib\n" ;\
 	fi
 
