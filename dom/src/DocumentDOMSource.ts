@@ -1,13 +1,13 @@
 import xs, {Stream, MemoryStream} from 'xstream';
 import {adapt} from '@cycle/run/lib/adapt';
 import {DevToolEnabledSource} from '@cycle/run';
-import {DOMSource, EventsFnOptions} from './DOMSource';
+import {BaseDOMSource, EventsFnOptions} from './DOMSource';
 import {fromEvent} from './fromEvent';
 
-export class DocumentDOMSource implements DOMSource {
+export class DocumentDOMSource implements BaseDOMSource {
   constructor(private _name: string) {}
 
-  public select(selector: string): DOMSource {
+  public select(selector: string): DocumentDOMSource {
     // This functionality is still undefined/undecided.
     return this;
   }

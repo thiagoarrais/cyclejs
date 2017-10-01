@@ -2,7 +2,7 @@ import xs from 'xstream';
 import {Stream, MemoryStream} from 'xstream';
 import {DevToolEnabledSource} from '@cycle/run';
 import {adapt} from '@cycle/run/lib/adapt';
-import {DOMSource, EventsFnOptions} from './DOMSource';
+import {BaseDOMSource, DOMSource, EventsFnOptions} from './DOMSource';
 import {DocumentDOMSource} from './DocumentDOMSource';
 import {BodyDOMSource} from './BodyDOMSource';
 import {VNode} from 'snabbdom/vnode';
@@ -88,7 +88,12 @@ function filterBasedOnIsolation(domSource: MainDOMSource, fullScope: string) {
   };
 }
 
-export class MainDOMSource implements DOMSource {
+export interface SpecialSelector {
+  body: BodyDOMSource;
+  document: DocumentDOMSource;
+}
+
+export class MainDOMSource implements BaseDOMSource {
   constructor(
     private _rootElement$: Stream<Element>,
     private _sanitation$: Stream<null>,
@@ -111,10 +116,10 @@ export class MainDOMSource implements DOMSource {
     };
   }
 
-  public elements(): MemoryStream<Element> {
-    let output$: Stream<Element | Array<Element>>;
+  public elements(): MemoryStream<Array<Element>> {
+    let output$: Stream<Array<Element>>;
     if (this._namespace.length === 0) {
-      output$ = this._rootElement$;
+      output$ = this._rootElement$.map(Array.of);
     } else {
       const elementFinder = new ElementFinder(
         this._namespace,
@@ -122,7 +127,7 @@ export class MainDOMSource implements DOMSource {
       );
       output$ = this._rootElement$.map(el => elementFinder.call(el));
     }
-    const out: DevToolEnabledSource & MemoryStream<Element> = adapt(
+    const out: DevToolEnabledSource & MemoryStream<Array<Element>> = adapt(
       output$.remember(),
     );
     out._isCycleSource = this._name;
@@ -133,6 +138,10 @@ export class MainDOMSource implements DOMSource {
     return this._namespace;
   }
 
+  public select<T extends keyof SpecialSelector>(
+    selector: T,
+  ): SpecialSelector[T];
+  public select(selector: string): MainDOMSource;
   public select(selector: string): DOMSource {
     if (typeof selector !== 'string') {
       throw new Error(
@@ -157,7 +166,7 @@ export class MainDOMSource implements DOMSource {
       this._isolateModule,
       this._delegators,
       this._name,
-    );
+    ) as DOMSource;
   }
 
   public events(

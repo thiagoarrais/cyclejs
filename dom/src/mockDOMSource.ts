@@ -1,7 +1,7 @@
 import xs, {Stream, MemoryStream} from 'xstream';
 import {DevToolEnabledSource, FantasyObservable} from '@cycle/run';
 import {VNode} from 'snabbdom/vnode';
-import {DOMSource, EventsFnOptions} from './DOMSource';
+import {BaseDOMSource, EventsFnOptions} from './DOMSource';
 import {adapt} from '@cycle/run/lib/adapt';
 
 export type MockConfig = {
@@ -10,7 +10,7 @@ export type MockConfig = {
 
 const SCOPE_PREFIX = '___';
 
-export class MockedDOMSource implements DOMSource {
+export class MockedDOMSource implements BaseDOMSource {
   private _elements: FantasyObservable;
 
   constructor(private _mockConfig: MockConfig) {
